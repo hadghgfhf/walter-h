@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Meine kleine Website</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: black;
+            color: white;
+        }
+        #colorBox {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            background-color: red;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Willkommen auf meiner Seite!</h1>
+    <div id="colorBox"></div>
+    <button onclick="playGame()">Starte Farbenspiel mit Ton</button>
+
+    <script>
+        function playGame() {
+            const box = document.getElementById("colorBox");
+            const colors = ["red", "green", "blue", "yellow", "purple", "orange"];
+            let i = 0;
+
+            // Farbwechsel alle 500ms
+            const interval = setInterval(() => {
+                box.style.backgroundColor = colors[i % colors.length];
+                i++;
+                // Ton abspielen
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                oscillator.type = "sine";
+                oscillator.frequency.setValueAtTime(200 + i * 50, audioCtx.currentTime);
+                oscillator.connect(audioCtx.destination);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.2);
+                if (i > 10) clearInterval(interval);
+            }, 500);
+        }
+    </script>
+</body>
+</html>
